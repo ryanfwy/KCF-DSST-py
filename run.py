@@ -3,7 +3,8 @@ from tracker import KCFTracker
 
 def tracker(cam, frame, bbox):
     tracker = KCFTracker(True, True, True) # (hog, fixed_Window, multi_scale)
-    ok = tracker.init(bbox, frame)
+    tracker.init(bbox, frame)
+    
     while True:
         ok, frame = cam.read()
 
