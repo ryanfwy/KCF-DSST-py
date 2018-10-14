@@ -13,10 +13,10 @@ NUM_SECTOR = 9
 FLT_EPSILON = 1e-07
 
 
-@jit
+@jit(cache=True)
 def func1(dx, dy, boundary_x, boundary_y, height, width, numChannels):
     r = np.zeros((height, width), np.float32)
-    alfa = np.zeros((height, width, 2), np.int)
+    alfa = np.zeros((height, width, 2), np.int32)
 
     for j in xrange(1, height-1):
         for i in xrange(1, width-1):
@@ -51,7 +51,7 @@ def func1(dx, dy, boundary_x, boundary_y, height, width, numChannels):
             alfa[j, i, 1] = maxi
     return r, alfa
 
-@jit
+@jit(cache=True)
 def func2(dx, dy, boundary_x, boundary_y, r, alfa, nearest, w, k, height, width, sizeX, sizeY, p, stringSize):
     mapp = np.zeros((sizeX*sizeY*p), np.float32)
     for i in xrange(sizeY):
@@ -72,7 +72,7 @@ def func2(dx, dy, boundary_x, boundary_y, r, alfa, nearest, w, k, height, width,
                             mapp[(i+nearest[ii])*stringSize + (j+nearest[jj])*p + alfa[k*i+ii,j*k+jj,1] + NUM_SECTOR] += r[k*i+ii,j*k+jj] * w[ii,1] * w[jj,1]
     return mapp
 
-@jit
+@jit(cache=True)
 def func3(partOfNorm, mappmap, sizeX, sizeY, p, xp, pp):
 	newData = np.zeros((sizeY*sizeX*pp), np.float32)
 	for i in xrange(1, sizeY+1):
@@ -109,7 +109,7 @@ def func3(partOfNorm, mappmap, sizeX, sizeY, p, xp, pp):
 			newData[pos2+10*p:pos2+12*p] = mappmap[pos1+p:pos1+3*p] / valOfNorm
 	return newData
 
-@jit
+@jit(cache=True)
 def func4(mappmap, p, sizeX, sizeY, pp, yp, xp, nx, ny):
 	newData = np.zeros((sizeX*sizeY*pp), np.float32)
 	for i in xrange(sizeY):
